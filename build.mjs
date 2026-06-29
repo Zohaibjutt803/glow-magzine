@@ -15,6 +15,7 @@ import { dirname, join } from 'node:path';
 import { SITE, CATEGORIES, TOOLS } from './tools-data.mjs';
 
 const ROOT = dirname( fileURLToPath( import.meta.url ) );
+const ASSET_VER = '5'; // bump when CSS/JS change (busts the immutable /assets cache)
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const isReady = ( t ) => !! t.handler;
 const toolUrl = ( slug ) => `/${ slug }/`;
@@ -38,8 +39,8 @@ function head( { title, desc, canonical, jsonld } ) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,0&display=block" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css">
-<link rel="stylesheet" href="/assets/css/tool.css">
+<link rel="stylesheet" href="/assets/css/style.css?v=${ ASSET_VER }">
+<link rel="stylesheet" href="/assets/css/tool.css?v=${ ASSET_VER }">
 ${ jsonld ? `<script type="application/ld+json">${ JSON.stringify( jsonld ) }</script>` : '' }
 </head>
 <body>`;
@@ -78,7 +79,7 @@ const FOOTER = `
 </div>
 <div class="footer__bottom"><p>© ${ new Date().getFullYear() } Glow Magazine. All Rights Reserved.</p><p>Made with <span class="heart">❤</span> for Everyone</p></div>
 </div></footer>
-<script src="/assets/js/main.js"></script>`;
+<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>`;
 
 const searchBox = `<div class="tool-search" data-gmt="search"><input type="search" placeholder="Search tools…" data-gmt="search-input" aria-label="Search tools"><ul class="tool-search__results" data-gmt="search-results" role="listbox" hidden></ul></div>`;
 
@@ -133,8 +134,8 @@ ${ ad( 'below_result' ) }
 		: '';
 
 	const scripts = ready
-		? `<script src="/assets/js/tool-runtime.js"></script>\n<script src="/assets/js/tools-index.js"></script>\n<script src="/assets/js/tools/${ t.handler }.js"></script>`
-		: `<script src="/assets/js/tool-runtime.js"></script>\n<script src="/assets/js/tools-index.js"></script>`;
+		? `<script src="/assets/js/tool-runtime.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools-index.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools/${ t.handler }.js?v=${ ASSET_VER }"></script>`
+		: `<script src="/assets/js/tool-runtime.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools-index.js?v=${ ASSET_VER }"></script>`;
 
 	const robots = ready ? '' : '<meta name="robots" content="noindex,follow">';
 
@@ -172,7 +173,7 @@ function listingPage() {
 ${ searchBox }
 ${ blocks }
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/tool-runtime.js"></script>\n<script src="/assets/js/tools-index.js"></script>\n</body></html>`;
+		+ FOOTER + `<script src="/assets/js/tool-runtime.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools-index.js?v=${ ASSET_VER }"></script>\n</body></html>`;
 }
 
 /* ----------------------------- category page ----------------------------- */
@@ -186,7 +187,7 @@ function categoryPage( key, cat ) {
 ${ searchBox }
 <div class="tools-grid">${ items.map( toolCard ).join( '' ) }</div>
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/tool-runtime.js"></script>\n<script src="/assets/js/tools-index.js"></script>\n</body></html>`;
+		+ FOOTER + `<script src="/assets/js/tool-runtime.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools-index.js?v=${ ASSET_VER }"></script>\n</body></html>`;
 }
 
 /* -------------------------------- sitemap -------------------------------- */

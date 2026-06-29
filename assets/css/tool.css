@@ -148,3 +148,27 @@
 .gmt-quiz__opt { text-align: left; padding: 12px 14px; border: 1px solid var(--outline-variant); border-radius: var(--radius-btn); background: var(--white); font: inherit; cursor: pointer; transition: border-color .15s ease, background .15s ease; }
 .gmt-quiz__opt:hover { border-color: var(--primary); background: var(--surface-low); }
 .gmt-quiz__opt.is-on { border-color: var(--primary); background: var(--primary-fixed); font-weight: 600; }
+
+/* ----------------------- responsive refinements ----------------------- */
+@media (max-width: 600px) {
+	.page { padding: 24px 14px 56px; }
+	.tool { padding: 18px; }
+	.tool-head__title { font-size: clamp(24px, 7vw, 32px); gap: 10px; }
+	.tool-head__ico { width: 48px; height: 48px; }
+	.tool-head__ico .material-symbols-outlined { font-size: 26px; }
+	/* segmented toggles span the full width and divide evenly */
+	.gmt-segmented { display: flex; width: 100%; }
+	.gmt-segmented button { flex: 1; padding: 11px 8px; }
+	.gmt-result { padding: 16px; }
+	.gmt-result__big { font-size: clamp(1.6rem, 7vw, 2rem); }
+}
+
+/* keep result tiles readable on very small screens */
+@media (max-width: 380px) {
+	.gmt-result__grid { grid-template-columns: 1fr !important; }
+}
+
+/* make the calendar popup never overflow the viewport on phones */
+@media (max-width: 360px) {
+	.gmt-dp__pop { width: calc(100vw - 36px); }
+}
