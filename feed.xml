@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Glow Magazine</title>
+  <link>https://glowmagazine.com/</link>
+  <description>Free online tools, calculators and how-to guides from Glow Magazine.</description>
+  <language>en-us</language>
+  <atom:link href="https://glowmagazine.com/feed.xml" rel="self" type="application/rss+xml"/>
+  <!-- no posts yet -->
+</channel>
+</rss>

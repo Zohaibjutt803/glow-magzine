@@ -20,8 +20,15 @@ const server = createServer( async ( req, res ) => {
 		res.writeHead( 200, { 'Content-Type': MIME[ extname( file ) ] || 'application/octet-stream' } );
 		res.end( data );
 	} catch {
-		res.writeHead( 404, { 'Content-Type': 'text/html' } );
-		res.end( '<h1>404 — Not found</h1><p><a href="/">Home</a> · <a href="/tools/">All tools</a></p>' );
+		try {
+			const fallback = normalize( join( ROOT, '404.html' ) );
+			const data = await readFile( fallback );
+			res.writeHead( 404, { 'Content-Type': 'text/html; charset=utf-8' } );
+			res.end( data );
+		} catch {
+			res.writeHead( 404, { 'Content-Type': 'text/html' } );
+			res.end( '<h1>404 — Not found</h1><p><a href="/">Home</a> · <a href="/tools/">All tools</a></p>' );
+		}
 	}
 } );
 

@@ -16,14 +16,20 @@ import { SITE, CATEGORIES, TOOLS } from './tools-data.mjs';
 import { fetchBlogData } from './blog.mjs';
 import { STATIC_PAGES } from './static-pages.mjs';
 import { BLOG_CATEGORIES } from './blog-categories.mjs';
+import { loadEnv, analyticsHead } from './env.mjs';
 
 const ROOT = dirname( fileURLToPath( import.meta.url ) );
-const ASSET_VER = '7';
+const ASSET_VER = '8';
+let HEAD_EXTRAS = '';
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const isReady = ( t ) => !! t.handler;
 const toolUrl = ( slug ) => `/${ slug }/`;
 const catUrl = ( c ) => `/tools/${ c }/`;
 const staticUrl = ( slug ) => `/${ slug }/`;
+const postUrl = ( slug ) => `/blog/${ slug }/`;
+const blogCatUrl = ( slug ) => `/category/${ slug }/`;
+const authorUrl = ( slug ) => `/author/${ slug }/`;
+const tagUrl = ( slug ) => `/tag/${ slug }/`;
 
 /* ----------------------------- shared chrome ----------------------------- */
 function head( { title, desc, canonical, jsonld } ) {
@@ -50,6 +56,8 @@ function head( { title, desc, canonical, jsonld } ) {
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,0&display=block" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css?v=${ ASSET_VER }">
 <link rel="stylesheet" href="/assets/css/tool.css?v=${ ASSET_VER }">
+<link rel="alternate" type="application/rss+xml" title="${ esc( SITE.name ) } RSS" href="${ SITE.url }/feed.xml">
+${ HEAD_EXTRAS }
 ${ jsonld ? `<script type="application/ld+json">${ JSON.stringify( jsonld ) }</script>` : '' }
 </head>
 <body>`;
@@ -88,7 +96,8 @@ const FOOTER = `
 <div class="footer__col"><h4>Quick Links</h4><ul><li><a href="/">Home</a></li><li><a href="/tools/">All Tools</a></li><li><a href="/tools/">Categories</a></li><li><a href="/blog/">Blog</a></li><li><a href="${ staticUrl( 'about' ) }">About Us</a></li><li><a href="${ staticUrl( 'contact' ) }">Contact</a></li></ul></div>
 <div class="footer__col"><h4>Categories</h4><ul>${ Object.entries( CATEGORIES ).map( ( [ k, c ] ) => `<li><a href="${ catUrl( k ) }">${ esc( c.name ) }</a></li>` ).join( '' ) }</ul></div>
 <div class="footer__col"><h4>Popular Tools</h4><ul>${ TOOLS.filter( isReady ).slice( 0, 5 ).map( ( t ) => `<li><a href="${ toolUrl( t.slug ) }">${ esc( t.name ) }</a></li>` ).join( '' ) }</ul></div>
-<div class="footer__col"><h4>Legal</h4><ul><li><a href="${ staticUrl( 'privacy-policy' ) }">Privacy Policy</a></li><li><a href="${ staticUrl( 'terms-of-use' ) }">Terms of Use</a></li><li><a href="${ staticUrl( 'disclaimer' ) }">Disclaimer</a></li><li><a href="${ staticUrl( 'cookie-policy' ) }">Cookie Policy</a></li></ul></div>
+<div class="footer__col"><h4>Guides</h4><ul>${ BLOG_CATEGORIES.slice( 0, 6 ).map( ( c ) => `<li><a href="${ blogCatUrl( c.slug ) }">${ esc( c.name ) }</a></li>` ).join( '' ) }</ul></div>
+<div class="footer__col"><h4>Legal</h4><ul><li><a href="${ staticUrl( 'privacy-policy' ) }">Privacy Policy</a></li><li><a href="${ staticUrl( 'terms-of-use' ) }">Terms of Use</a></li><li><a href="${ staticUrl( 'editorial-policy' ) }">Editorial Policy</a></li><li><a href="${ staticUrl( 'disclaimer' ) }">Disclaimer</a></li><li><a href="${ staticUrl( 'cookie-policy' ) }">Cookie Policy</a></li></ul></div>
 </div>
 <div class="footer__bottom"><p>© ${ new Date().getFullYear() } Glow Magazine. All Rights Reserved.</p><p>Made with <span class="heart">❤</span> for Everyone</p></div>
 </div></footer>
@@ -228,10 +237,6 @@ function robotsTxt() {
 }
 
 /* --------------------------------- blog --------------------------------- */
-const postUrl = ( slug ) => `/blog/${ slug }/`;
-const blogCatUrl = ( slug ) => `/category/${ slug }/`;
-const authorUrl = ( slug ) => `/author/${ slug }/`;
-const tagUrl = ( slug ) => `/tag/${ slug }/`;
 
 function mergeBlogCategories( posts, cfCategories ) {
 	const map = new Map( BLOG_CATEGORIES.map( ( c ) => [ c.slug, { ...c } ] ) );
@@ -484,17 +489,98 @@ function buildSiteIndex( posts, blogCategories ) {
 	return items;
 }
 
-/* Inject the latest posts into the homepage blog grid (between markers). */
-async function patchHomepageBlog( posts ) {
+/* Inject homepage sections from Contentful (markers in index.html). */
+function replaceMarker( html, start, end, content ) {
+	const a = html.indexOf( start ), b = html.indexOf( end );
+	if ( a === -1 || b === -1 ) return html;
+	return html.slice( 0, a + start.length ) + '\n' + content + '\n\t\t\t' + html.slice( b );
+}
+
+function featuredPostHtml( p ) {
+	if ( ! p ) return '<p class="gmt-notice">Featured stories coming soon — subscribe below for updates.</p>';
+	const media = p.cover
+		? `<div class="featured-post__media"><img src="${ esc( p.cover ) }" alt="${ esc( p.coverAlt ) }" loading="lazy"></div>`
+		: '';
+	return `<article class="featured-post">
+${ media }
+<div class="featured-post__body">
+<div class="post__meta"><a href="${ blogCatUrl( p.categorySlug ) }" class="badge ${ p.tint }">${ esc( p.categoryName ) }</a><span class="post__date">${ esc( p.date ) }</span></div>
+<h3><a href="${ postUrl( p.slug ) }">${ esc( p.title ) }</a></h3>
+<p>${ esc( p.excerpt ) }</p>
+<a href="${ postUrl( p.slug ) }" class="btn btn--primary">Read Featured Story <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</article>`;
+}
+
+function trendingHtml( posts ) {
+	if ( ! posts.length ) return '<p class="gmt-notice">Trending guides will appear here as we publish new articles.</p>';
+	return `<ol class="trending-list">${ posts.map( ( p ) => `
+<li><a href="${ postUrl( p.slug ) }"><span class="trending-list__cat">${ esc( p.categoryName ) }</span><span class="trending-list__title">${ esc( p.title ) }</span><span class="trending-list__date">${ esc( p.date ) }</span></a></li>` ).join( '' ) }</ol>`;
+}
+
+function guidesHtml( categories ) {
+	return `<div class="guides-grid">${ categories.map( ( c ) => `
+<a class="guide-card" href="${ blogCatUrl( c.slug ) }">
+<h3>${ esc( c.name ) }</h3>
+<p>${ esc( ( c.blurb || '' ).slice( 0, 90 ) ) }</p>
+<span class="guide-card__link">Browse guides <span class="material-symbols-outlined">arrow_forward</span></span>
+</a>` ).join( '' ) }</div>`;
+}
+
+async function patchHomepage( posts, blogCategories ) {
 	const file = join( ROOT, 'index.html' );
 	let html;
 	try { html = await readFile( file, 'utf8' ); } catch { return; }
-	const START = '<!-- BLOG:START -->', END = '<!-- BLOG:END -->';
-	const a = html.indexOf( START ), b = html.indexOf( END );
-	if ( a === -1 || b === -1 ) { console.warn( '⚠ Homepage blog markers not found — skipped homepage injection.' ); return; }
-	const cards = posts.slice( 0, 4 ).map( postCard ).join( '\n' );
-	const next = html.slice( 0, a + START.length ) + '\n' + cards + '\n\t\t\t' + html.slice( b );
-	if ( next !== html ) { await writeFile( file, next, 'utf8' ); console.log( '✓ Homepage blog grid updated from Contentful.' ); }
+	const featured = posts.find( ( p ) => p.featured ) || posts[ 0 ];
+	const next = replaceMarker( replaceMarker( replaceMarker( replaceMarker( html,
+		'<!-- FEATURED:START -->', '<!-- FEATURED:END -->', featuredPostHtml( featured ) ),
+		'<!-- TRENDING:START -->', '<!-- TRENDING:END -->', trendingHtml( posts.slice( 0, 5 ) ) ),
+		'<!-- BLOG:START -->', '<!-- BLOG:END -->', posts.length ? posts.slice( 0, 4 ).map( postCard ).join( '\n' ) : '<p class="gmt-notice">New articles coming soon.</p>' ),
+		'<!-- GUIDES:START -->', '<!-- GUIDES:END -->', guidesHtml( blogCategories.slice( 0, 6 ) ) );
+	let patched = HEAD_EXTRAS && ! next.includes( 'googletagmanager' )
+		? next.replace( '<!-- BUILD:HEAD -->', HEAD_EXTRAS + '\n<!-- BUILD:HEAD -->' )
+		: next;
+	if ( patched !== html ) {
+		await writeFile( file, patched, 'utf8' );
+		console.log( '✓ Homepage magazine sections updated.' );
+	}
+}
+
+const escXml = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
+const cdata = ( s = '' ) => `<![CDATA[${ String( s ).replace( /]]>/g, ']]]]><![CDATA[>' ) }]]>`;
+
+function rssFeed( posts ) {
+	const items = posts.map( ( p ) => `  <item>
+    <title>${ escXml( p.title ) }</title>
+    <link>${ SITE.url }${ postUrl( p.slug ) }</link>
+    <guid isPermaLink="true">${ SITE.url }${ postUrl( p.slug ) }</guid>
+    <pubDate>${ new Date( p.iso ).toUTCString() }</pubDate>
+    <description>${ cdata( p.excerpt || p.seoDescription ) }</description>
+  </item>` ).join( '\n' );
+	return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>${ escXml( SITE.name ) }</title>
+  <link>${ SITE.url }/</link>
+  <description>Free online tools, calculators and how-to guides from Glow Magazine.</description>
+  <language>en-us</language>
+  <atom:link href="${ SITE.url }/feed.xml" rel="self" type="application/rss+xml"/>
+${ items || '  <!-- no posts yet -->' }
+</channel>
+</rss>
+`;
+}
+
+function notFoundPage() {
+	return head( { title: 'Page Not Found — Glow Magazine', desc: 'The page you requested could not be found. Browse our free tools and articles.', canonical: '/404/' } ).replace( '</head>', '<meta name="robots" content="noindex,follow">\n</head>' )
+		+ HEADER
+		+ `<main><div class="page page--wide">
+<header class="page-head"><span class="eyebrow">404</span><h1>Page not found</h1><p>Sorry, we could not find that page. Try searching or explore our free tools and guides.</p></header>
+${ searchBox.replace( 'Search tools…', 'Search tools, articles…' ) }
+<div class="tools-grid" style="margin-top:24px">${ TOOLS.filter( isReady ).slice( 0, 6 ).map( toolCard ).join( '' ) }</div>
+<p style="margin-top:28px"><a href="/">← Back to home</a> · <a href="/blog/">Blog</a> · <a href="/tools/">All tools</a></p>
+</div></main>`
+		+ FOOTER + `<script src="/assets/js/tool-runtime.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/tools-index.js?v=${ ASSET_VER }"></script>\n<script src="/assets/js/site-index.js?v=${ ASSET_VER }"></script>\n</body></html>`;
 }
 
 /* -------------------------------- sitemap -------------------------------- */
@@ -520,6 +606,9 @@ async function out( rel, content ) {
 }
 
 async function build() {
+	await loadEnv();
+	HEAD_EXTRAS = analyticsHead( esc );
+
 	let n = 0;
 	for ( const t of TOOLS ) { await out( join( t.slug, 'index.html' ), toolPage( t ) ); n++; }
 	await out( join( 'tools', 'index.html' ), listingPage() );
@@ -533,9 +622,11 @@ async function build() {
 
 	if ( posts.length ) {
 		for ( const p of posts ) { await out( join( 'blog', p.slug, 'index.html' ), blogPostPage( p, posts, blogCategories ) ); }
-		await patchHomepageBlog( posts );
 	}
 	await out( join( 'blog', 'index.html' ), blogListingPage( posts, blogCategories ) );
+	await patchHomepage( posts, blogCategories );
+	await out( 'feed.xml', rssFeed( posts ) );
+	await out( '404.html', notFoundPage() );
 
 	for ( const cat of blogCategories ) {
 		await out( join( 'category', cat.slug, 'index.html' ), categoryArchivePage( cat, posts ) );
@@ -557,7 +648,7 @@ async function build() {
 	await out( join( 'assets', 'js', 'site-index.js' ), 'window.GMT_SITE_INDEX = ' + JSON.stringify( buildSiteIndex( posts, blogCategories ) ) + ';\n' );
 
 	console.log( `✓ Generated ${ n } tool pages, ${ Object.keys( CATEGORIES ).length } tool categories, ${ STATIC_PAGES.length } static pages.` );
-	console.log( `✓ Blog archives: ${ blogCategories.length } categories, ${ authors.length } authors, ${ tags.length } tags, search page.` );
+	console.log( `✓ Blog archives: ${ blogCategories.length } categories, ${ authors.length } authors, ${ tags.length } tags, search + RSS + 404.` );
 	console.log( `✓ Live calculators: ${ TOOLS.filter( isReady ).length } / ${ TOOLS.length }` );
 	console.log( `✓ Blog posts: ${ posts.length ? posts.length + ' from Contentful' : 'none (static placeholder kept)' }` );
 }

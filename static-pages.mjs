@@ -141,4 +141,25 @@ export const STATIC_PAGES = [
 <h2>More information</h2>
 <p>See our <a href="/privacy-policy/">Privacy Policy</a> for how we handle personal data. Questions? <a href="/contact/">Contact us</a>.</p>`,
 	},
+	{
+		slug: 'editorial-policy',
+		name: 'Editorial Policy',
+		title: 'Editorial Policy — Glow Magazine',
+		desc: 'How Glow Magazine creates, reviews and publishes original articles, guides and tool documentation.',
+		body: `
+<p><strong>Last updated:</strong> June 30, 2026</p>
+<p>Glow Magazine is committed to publishing helpful, accurate and original content alongside our free online tools. This editorial policy explains our standards and how we handle corrections.</p>
+<h2>Our content</h2>
+<p>We publish how-to guides, explainers, tips and articles on health, beauty, finance, lifestyle and free online tools. Content is written for general informational purposes and is reviewed before publication.</p>
+<h2>Accuracy &amp; updates</h2>
+<p>We aim to keep articles factually correct and up to date. When standards change or errors are found, we update posts and note significant revisions where appropriate.</p>
+<h2>Originality</h2>
+<p>Our articles and tool pages are original work. We do not publish thin, scraped or automatically generated content designed only to rank in search engines.</p>
+<h2>Tools &amp; calculators</h2>
+<p>Free tools run in your browser. Results are estimates for educational use — not medical, financial or legal advice. See our <a href="/disclaimer/">Disclaimer</a>.</p>
+<h2>Advertising</h2>
+<p>We may display ads (including Google AdSense). Advertising does not influence our editorial standards. Sponsored content, if any, will be clearly labelled.</p>
+<h2>Corrections &amp; contact</h2>
+<p>Spotted an error or have a correction? Email <a href="mailto:editorial@glowmagazine.com">editorial@glowmagazine.com</a> or use our <a href="/contact/">Contact</a> page.</p>`,
+	},
 ];

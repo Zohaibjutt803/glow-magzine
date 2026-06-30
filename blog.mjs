@@ -5,19 +5,15 @@
  * Expected Contentful content types (create in Contentful → Content model):
  *   blogPost   slug, title, excerpt, body, coverImage, publishedDate, updatedDate,
  *              seoTitle, seoDescription, author (ref→author), category (ref→category or Short text),
- *              tags (ref→tag, many), relatedTools (Short text list of tool slugs)
+ *              tags (ref→tag, many), relatedTools (Short text list of tool slugs), featured (Boolean)
  *   author     slug, name, bio, avatar, role, seoTitle, seoDescription
  *   category   slug, name, description, seoTitle, seoDescription
  *   tag        slug, name, seoTitle, seoDescription
  *
  * Graceful fallback: missing env or API errors → empty data; static blog placeholders kept.
  */
-import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
 import { BLOG_CATEGORIES, CATEGORY_ALIASES } from './blog-categories.mjs';
-
-const ROOT = dirname( fileURLToPath( import.meta.url ) );
+import { loadEnv } from './env.mjs';
 
 const PILLAR_BY_SLUG = new Map( BLOG_CATEGORIES.map( ( c ) => [ c.slug, c ] ) );
 
@@ -32,19 +28,7 @@ function resolveCategorySlug( raw ) {
 	return CATEGORY_ALIASES[ slug ] || slug;
 }
 
-/* --------------------------- tiny .env loader --------------------------- */
-async function loadEnv() {
-	try {
-		const raw = await readFile( join( ROOT, '.env' ), 'utf8' );
-		for ( const line of raw.split( /\r?\n/ ) ) {
-			const m = line.match( /^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/ );
-			if ( ! m || line.trimStart().startsWith( '#' ) ) continue;
-			let v = m[ 2 ].trim();
-			if ( ( v.startsWith( '"' ) && v.endsWith( '"' ) ) || ( v.startsWith( "'" ) && v.endsWith( "'" ) ) ) v = v.slice( 1, -1 );
-			if ( process.env[ m[ 1 ] ] === undefined ) process.env[ m[ 1 ] ] = v;
-		}
-	} catch { /* no .env */ }
-}
+/* --------------------------- env (shared) --------------------------- */
 
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 
@@ -210,6 +194,7 @@ function normalisePost( item, assets, entries ) {
 		author,
 		tags,
 		relatedTools,
+		featured: !! f.featured,
 	};
 }
 
