@@ -17,6 +17,7 @@
 	if ( toggle && menu ) {
 		toggle.addEventListener( 'click', function () {
 			var open = menu.classList.toggle( 'is-open' );
+			document.body.classList.toggle( 'nav-open', open );
 			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
 			toggle.querySelector( '.material-symbols-outlined' ).textContent = open ? 'close' : 'menu';
 		} );
@@ -24,6 +25,7 @@
 		menu.addEventListener( 'click', function ( e ) {
 			if ( e.target.closest( 'a' ) ) {
 				menu.classList.remove( 'is-open' );
+				document.body.classList.remove( 'nav-open' );
 				toggle.setAttribute( 'aria-expanded', 'false' );
 				toggle.querySelector( '.material-symbols-outlined' ).textContent = 'menu';
 			}

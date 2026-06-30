@@ -19,7 +19,7 @@ import { BLOG_CATEGORIES } from './blog-categories.mjs';
 import { loadEnv, analyticsHead } from './env.mjs';
 
 const ROOT = dirname( fileURLToPath( import.meta.url ) );
-const ASSET_VER = '8';
+const ASSET_VER = '9';
 let HEAD_EXTRAS = '';
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const isReady = ( t ) => !! t.handler;
@@ -63,14 +63,16 @@ ${ jsonld ? `<script type="application/ld+json">${ JSON.stringify( jsonld ) }</s
 <body>`;
 }
 
+const LOGO = `<a href="/" class="logo" aria-label="${ esc( SITE.name ) } home"><span class="logo__mark">Glow</span><span class="logo__sub">Magzine</span></a>`;
+
 const HEADER = `
 <div class="announce"><div class="announce__inner">
-<div class="announce__left"><span>🎁</span><span>100% FREE Tools • No Sign Up • Instant Results</span></div>
+<div class="announce__left"><span>✨</span><span>${ esc( SITE.tagline ) }</span></div>
 <nav class="announce__links"><a href="${ staticUrl( 'about' ) }">About Us</a><a href="${ staticUrl( 'contact' ) }">Contact</a><a href="${ staticUrl( 'privacy-policy' ) }">Privacy Policy</a><a href="${ staticUrl( 'disclaimer' ) }">Disclaimer</a></nav>
 </div></div>
 <header class="header" id="header"><nav class="nav">
 <div class="nav__left">
-<a href="/" class="logo" aria-label="Glow Magazine home"><span class="logo__mark">Glow</span><span class="logo__sub">Magazine</span></a>
+${ LOGO }
 <div class="menu"><a href="/">Home</a><a href="/tools/">Tools</a><a href="/tools/">Categories</a><a href="/blog/">Blog</a><a href="${ staticUrl( 'about' ) }">About Us</a><a href="${ staticUrl( 'contact' ) }">Contact</a></div>
 </div>
 <div class="nav__right">
@@ -89,8 +91,8 @@ const FOOTER = `
 <footer class="footer"><div class="container">
 <div class="footer__grid">
 <div class="footer__brand">
-<a href="/" class="logo"><span class="logo__mark">Glow</span><span class="logo__sub">Magazine</span></a>
-<p class="footer__about">Your one-stop destination for free online tools, calculators, converters and generators. Fast, simple, and 100% free forever.</p>
+${ LOGO }
+<p class="footer__about">${ esc( SITE.footer ) }</p>
 <div class="footer__social"><a href="/" aria-label="Website"><span class="material-symbols-outlined">public</span></a><a href="${ staticUrl( 'contact' ) }" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a><a href="/tools/" aria-label="Tools"><span class="material-symbols-outlined">apps</span></a></div>
 </div>
 <div class="footer__col"><h4>Quick Links</h4><ul><li><a href="/">Home</a></li><li><a href="/tools/">All Tools</a></li><li><a href="/tools/">Categories</a></li><li><a href="/blog/">Blog</a></li><li><a href="${ staticUrl( 'about' ) }">About Us</a></li><li><a href="${ staticUrl( 'contact' ) }">Contact</a></li></ul></div>
@@ -99,7 +101,7 @@ const FOOTER = `
 <div class="footer__col"><h4>Guides</h4><ul>${ BLOG_CATEGORIES.slice( 0, 6 ).map( ( c ) => `<li><a href="${ blogCatUrl( c.slug ) }">${ esc( c.name ) }</a></li>` ).join( '' ) }</ul></div>
 <div class="footer__col"><h4>Legal</h4><ul><li><a href="${ staticUrl( 'privacy-policy' ) }">Privacy Policy</a></li><li><a href="${ staticUrl( 'terms-of-use' ) }">Terms of Use</a></li><li><a href="${ staticUrl( 'editorial-policy' ) }">Editorial Policy</a></li><li><a href="${ staticUrl( 'disclaimer' ) }">Disclaimer</a></li><li><a href="${ staticUrl( 'cookie-policy' ) }">Cookie Policy</a></li></ul></div>
 </div>
-<div class="footer__bottom"><p>© ${ new Date().getFullYear() } Glow Magazine. All Rights Reserved.</p><p>Made with <span class="heart">❤</span> for Everyone</p></div>
+<div class="footer__bottom"><p>© ${ new Date().getFullYear() } ${ esc( SITE.name ) }. All Rights Reserved.</p><p>Made with <span class="heart">❤</span> for Everyone</p></div>
 </div></footer>
 <script src="/assets/js/main.js?v=${ ASSET_VER }"></script>`;
 
@@ -187,7 +189,7 @@ function listingPage() {
 		return `<div class="cat-block"><h2 class="cat-block__title"><span class="material-symbols-outlined">${ cat.icon }</span> <a href="${ catUrl( key ) }">${ esc( cat.name ) }</a></h2><div class="tools-grid">${ items.map( toolCard ).join( '' ) }</div></div>`;
 	} ).join( '' );
 
-	return head( { title: 'All Free Online Tools & Calculators | Glow Magazine', desc: 'Browse all 50+ free, fast and mobile-friendly online tools and calculators for health, beauty, finance and everyday life.', canonical: '/tools/' } )
+	return head( { title: `All Free Online Tools & Calculators | ${ SITE.name }`, desc: 'Browse all 50+ free, fast and mobile-friendly online tools and calculators for health, beauty, finance and everyday life.', canonical: '/tools/' } )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><span aria-current="page">Tools</span></li></ol>
@@ -201,7 +203,7 @@ ${ blocks }
 /* ----------------------------- category page ----------------------------- */
 function categoryPage( key, cat ) {
 	const items = TOOLS.filter( ( t ) => t.category === key );
-	return head( { title: `${ cat.name } Tools — Free & Instant | Glow Magazine`, desc: cat.blurb, canonical: catUrl( key ) } )
+	return head( { title: `${ cat.name } Tools — Free & Instant | ${ SITE.name }`, desc: cat.blurb, canonical: catUrl( key ) } )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/tools/">Tools</a></li><li><span aria-current="page">${ esc( cat.name ) }</span></li></ol>
@@ -246,8 +248,8 @@ function mergeBlogCategories( posts, cfCategories ) {
 			map.set( p.categorySlug, {
 				slug: p.categorySlug,
 				name: p.categoryName,
-				title: `${ p.categoryName } Articles | Glow Magazine`,
-				desc: `Read ${ p.categoryName } articles, tips and guides on Glow Magazine.`,
+				title: `${ p.categoryName } Articles | ${ SITE.name }`,
+				desc: `Read ${ p.categoryName } articles, tips and guides on ${ SITE.name }.`,
 				blurb: `Articles about ${ p.categoryName }.`,
 				toolCategory: '',
 			} );
@@ -309,7 +311,7 @@ function blogListingPage( posts, categories ) {
 	const catNav = categories.length
 		? `<nav class="archive-nav" aria-label="Blog categories">${ categories.map( ( c ) => `<a href="${ blogCatUrl( c.slug ) }">${ esc( c.name ) }</a>` ).join( '' ) }</nav>`
 		: '';
-	return head( { title: 'Blog — Articles, Tips & Guides | Glow Magazine', desc: 'Read the latest articles, tips and guides from Glow Magazine on health, beauty, finance and everyday productivity.', canonical: '/blog/' } )
+	return head( { title: `Blog — Articles, Tips & Guides | ${ SITE.name }`, desc: `Read the latest articles, tips and guides from ${ SITE.name } on health, beauty, finance and everyday productivity.`, canonical: '/blog/' } )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><span aria-current="page">Blog</span></li></ol>
@@ -432,7 +434,7 @@ function tagArchivePage( tag, posts ) {
 		] },
 		{ '@type': 'CollectionPage', name: tag.title, description: tag.desc, url: SITE.url + tagUrl( tag.slug ) }
 	];
-	return head( { title: tag.title || `${ tag.name } — Articles | Glow Magazine`, desc: tag.desc, canonical: tagUrl( tag.slug ), jsonld: { '@context': 'https://schema.org', '@graph': graph } } )
+	return head( { title: tag.title || `${ tag.name } — Articles | ${ SITE.name }`, desc: tag.desc, canonical: tagUrl( tag.slug ), jsonld: { '@context': 'https://schema.org', '@graph': graph } } )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/blog/">Blog</a></li><li><span aria-current="page">${ esc( tag.name ) }</span></li></ol>
@@ -443,7 +445,7 @@ function tagArchivePage( tag, posts ) {
 }
 
 function searchPage() {
-	return head( { title: 'Search — Tools & Articles | Glow Magazine', desc: 'Search free online tools, calculators and blog articles on Glow Magazine.', canonical: '/search/' } )
+	return head( { title: `Search — Tools & Articles | ${ SITE.name }`, desc: `Search free online tools, calculators and blog articles on ${ SITE.name }.`, canonical: '/search/' } )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><span aria-current="page">Search</span></li></ol>
@@ -562,7 +564,7 @@ function rssFeed( posts ) {
 <channel>
   <title>${ escXml( SITE.name ) }</title>
   <link>${ SITE.url }/</link>
-  <description>Free online tools, calculators and how-to guides from Glow Magazine.</description>
+  <description>Free online tools, calculators and how-to guides from ${ SITE.name }.</description>
   <language>en-us</language>
   <atom:link href="${ SITE.url }/feed.xml" rel="self" type="application/rss+xml"/>
 ${ items || '  <!-- no posts yet -->' }
@@ -572,7 +574,7 @@ ${ items || '  <!-- no posts yet -->' }
 }
 
 function notFoundPage() {
-	return head( { title: 'Page Not Found — Glow Magazine', desc: 'The page you requested could not be found. Browse our free tools and articles.', canonical: '/404/' } ).replace( '</head>', '<meta name="robots" content="noindex,follow">\n</head>' )
+	return head( { title: `Page Not Found — ${ SITE.name }`, desc: 'The page you requested could not be found. Browse our free tools and articles.', canonical: '/404/' } ).replace( '</head>', '<meta name="robots" content="noindex,follow">\n</head>' )
 		+ HEADER
 		+ `<main><div class="page page--wide">
 <header class="page-head"><span class="eyebrow">404</span><h1>Page not found</h1><p>Sorry, we could not find that page. Try searching or explore our free tools and guides.</p></header>

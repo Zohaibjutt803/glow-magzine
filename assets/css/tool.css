@@ -3,7 +3,7 @@
    Loaded alongside style.css (which provides the design tokens + chrome).
    ===================================================================== */
 
-.page { max-width: 920px; margin: 0 auto; padding: 32px 16px 64px; }
+.page { max-width: 920px; margin: 0 auto; padding: 32px 16px 64px; position: relative; z-index: 0; }
 @media (min-width: 768px) { .page { padding: 40px 24px 80px; } }
 .page--wide { max-width: var(--container); }
 

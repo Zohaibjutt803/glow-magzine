@@ -5,10 +5,10 @@ export const STATIC_PAGES = [
 	{
 		slug: 'about',
 		name: 'About Us',
-		title: 'About Us — Glow Magazine | Free Online Tools & Guides',
-		desc: 'Learn about Glow Magazine — your destination for free online tools, calculators, converters and helpful articles on health, beauty, finance and everyday life.',
+		title: 'About Us — Glow Magzine | Free Online Tools & Guides',
+		desc: 'Learn about Glow Magzine — your destination for free online tools, calculators, converters and helpful articles on health, beauty, finance and everyday life.',
 		body: `
-<p>Glow Magazine is a free digital resource offering 50+ online tools, calculators and converters for health, beauty, women's health, nutrition, finance and everyday tasks. We believe useful tools should be fast, private and accessible to everyone — no sign-up required.</p>
+<p>Glow Magzine is a free digital resource offering 50+ online tools, calculators and converters for health, beauty, women's health, nutrition, finance and everyday tasks. We believe useful tools should be fast, private and accessible to everyone — no sign-up required.</p>
 <p>Alongside our tools, we publish articles and how-to guides to help you make informed decisions about wellness, productivity and daily life.</p>
 <h2>Our mission</h2>
 <p>Make professional-grade calculators and practical guides available to everyone, for free, on any device.</p>
@@ -24,8 +24,8 @@ export const STATIC_PAGES = [
 	{
 		slug: 'contact',
 		name: 'Contact',
-		title: 'Contact Us — Glow Magazine',
-		desc: 'Get in touch with the Glow Magazine team. Questions about our free tools, articles, partnerships or advertising — we are here to help.',
+		title: 'Contact Us — Glow Magzine',
+		desc: 'Get in touch with the Glow Magzine team. Questions about our free tools, articles, partnerships or advertising — we are here to help.',
 		body: `
 <p>We welcome your questions, feedback and partnership enquiries. Choose the option that fits best below.</p>
 <h2>General enquiries</h2>
@@ -40,11 +40,11 @@ export const STATIC_PAGES = [
 	{
 		slug: 'privacy-policy',
 		name: 'Privacy Policy',
-		title: 'Privacy Policy — Glow Magazine',
-		desc: 'How Glow Magazine collects, uses and protects your information when you use our free online tools and read our articles.',
+		title: 'Privacy Policy — Glow Magzine',
+		desc: 'How Glow Magzine collects, uses and protects your information when you use our free online tools and read our articles.',
 		body: `
 <p><strong>Last updated:</strong> June 30, 2026</p>
-<p>Glow Magazine ("we", "us", "our") operates glowmagazine.com. This Privacy Policy explains how we handle information when you visit our website and use our free tools.</p>
+<p>Glow Magzine ("we", "us", "our") operates glowmagazine.com. This Privacy Policy explains how we handle information when you visit our website and use our free tools.</p>
 <h2>Information we collect</h2>
 <p><strong>Tool usage:</strong> Our calculators and converters run in your browser. We do not collect or store the numbers, text or personal data you enter into our tools unless a specific tool page states otherwise.</p>
 <p><strong>Automatically collected data:</strong> Like most websites, we may collect standard log data (IP address, browser type, pages visited, referring URL) through our hosting and analytics providers.</p>
@@ -71,12 +71,12 @@ export const STATIC_PAGES = [
 	{
 		slug: 'disclaimer',
 		name: 'Disclaimer',
-		title: 'Disclaimer — Glow Magazine',
-		desc: 'Important disclaimers for Glow Magazine free tools, calculators and articles. Not medical, financial or legal advice.',
+		title: 'Disclaimer — Glow Magzine',
+		desc: 'Important disclaimers for Glow Magzine free tools, calculators and articles. Not medical, financial or legal advice.',
 		body: `
 <p><strong>Last updated:</strong> June 30, 2026</p>
 <h2>General information only</h2>
-<p>Content on Glow Magazine — including articles, guides and tool results — is provided for general informational and educational purposes only. It is not a substitute for professional advice.</p>
+<p>Content on Glow Magzine — including articles, guides and tool results — is provided for general informational and educational purposes only. It is not a substitute for professional advice.</p>
 <h2>Not medical advice</h2>
 <p>Health, nutrition, pregnancy and women's health calculators and articles are not medical advice. Always consult a qualified healthcare provider before making health decisions. Do not disregard professional medical advice because of something you read on this site.</p>
 <h2>Not financial or legal advice</h2>
@@ -93,26 +93,26 @@ export const STATIC_PAGES = [
 	{
 		slug: 'terms-of-use',
 		name: 'Terms of Use',
-		title: 'Terms of Use — Glow Magazine',
-		desc: 'Terms and conditions for using Glow Magazine free online tools, calculators and website content.',
+		title: 'Terms of Use — Glow Magzine',
+		desc: 'Terms and conditions for using Glow Magzine free online tools, calculators and website content.',
 		body: `
 <p><strong>Last updated:</strong> June 30, 2026</p>
 <p>By accessing glowmagazine.com you agree to these Terms of Use. If you do not agree, please do not use the site.</p>
 <h2>Use of the site</h2>
 <p>You may use our free tools and read our content for personal, non-commercial purposes unless we give written permission otherwise. You may not scrape, copy, redistribute or resell our content or tools in bulk without permission.</p>
 <h2>Intellectual property</h2>
-<p>All site content, design, logos and tool implementations are owned by Glow Magazine or our licensors and protected by applicable copyright laws.</p>
+<p>All site content, design, logos and tool implementations are owned by Glow Magzine or our licensors and protected by applicable copyright laws.</p>
 <h2>Prohibited conduct</h2>
 <ul>
 <li>Attempting to disrupt or compromise site security</li>
 <li>Using automated means to overload our servers</li>
-<li>Misrepresenting affiliation with Glow Magazine</li>
+<li>Misrepresenting affiliation with Glow Magzine</li>
 <li>Using the site for unlawful purposes</li>
 </ul>
 <h2>Disclaimer of warranties</h2>
 <p>The site and tools are provided "as is" without warranties of any kind. See our <a href="/disclaimer/">Disclaimer</a> for important limitations.</p>
 <h2>Limitation of liability</h2>
-<p>To the fullest extent permitted by law, Glow Magazine shall not be liable for any indirect, incidental or consequential damages arising from your use of the site.</p>
+<p>To the fullest extent permitted by law, Glow Magzine shall not be liable for any indirect, incidental or consequential damages arising from your use of the site.</p>
 <h2>Changes</h2>
 <p>We may modify these terms at any time. Your continued use constitutes acceptance of revised terms.</p>
 <h2>Contact</h2>
@@ -121,11 +121,11 @@ export const STATIC_PAGES = [
 	{
 		slug: 'cookie-policy',
 		name: 'Cookie Policy',
-		title: 'Cookie Policy — Glow Magazine',
-		desc: 'How Glow Magazine uses cookies and similar technologies on glowmagazine.com.',
+		title: 'Cookie Policy — Glow Magzine',
+		desc: 'How Glow Magzine uses cookies and similar technologies on glowmagazine.com.',
 		body: `
 <p><strong>Last updated:</strong> June 30, 2026</p>
-<p>This Cookie Policy explains how Glow Magazine uses cookies and similar technologies when you visit glowmagazine.com.</p>
+<p>This Cookie Policy explains how Glow Magzine uses cookies and similar technologies when you visit glowmagazine.com.</p>
 <h2>What are cookies?</h2>
 <p>Cookies are small text files stored on your device by your browser. They help websites remember preferences and understand how visitors use the site.</p>
 <h2>How we use cookies</h2>
@@ -144,11 +144,11 @@ export const STATIC_PAGES = [
 	{
 		slug: 'editorial-policy',
 		name: 'Editorial Policy',
-		title: 'Editorial Policy — Glow Magazine',
-		desc: 'How Glow Magazine creates, reviews and publishes original articles, guides and tool documentation.',
+		title: 'Editorial Policy — Glow Magzine',
+		desc: 'How Glow Magzine creates, reviews and publishes original articles, guides and tool documentation.',
 		body: `
 <p><strong>Last updated:</strong> June 30, 2026</p>
-<p>Glow Magazine is committed to publishing helpful, accurate and original content alongside our free online tools. This editorial policy explains our standards and how we handle corrections.</p>
+<p>Glow Magzine is committed to publishing helpful, accurate and original content alongside our free online tools. This editorial policy explains our standards and how we handle corrections.</p>
 <h2>Our content</h2>
 <p>We publish how-to guides, explainers, tips and articles on health, beauty, finance, lifestyle and free online tools. Content is written for general informational purposes and is reviewed before publication.</p>
 <h2>Accuracy &amp; updates</h2>

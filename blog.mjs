@@ -108,12 +108,12 @@ function normaliseAuthor( item, assets ) {
 	const avatar = f.avatar?.sys?.id ? assets.get( f.avatar.sys.id ) : null;
 	return {
 		slug: f.slug || slugify( f.name ),
-		name: f.name || 'Glow Magazine',
+		name: f.name || 'Glow Magzine',
 		bio: f.bio || '',
 		role: f.role || '',
 		avatar: avatar?.url || '',
-		seoTitle: f.seoTitle || `${ f.name } — Author | Glow Magazine`,
-		seoDescription: f.seoDescription || f.bio || `Articles by ${ f.name } on Glow Magazine.`,
+		seoTitle: f.seoTitle || `${ f.name } — Author | Glow Magzine`,
+		seoDescription: f.seoDescription || f.bio || `Articles by ${ f.name } on Glow Magzine.`,
 	};
 }
 
@@ -124,7 +124,7 @@ function normaliseCategory( item ) {
 	return {
 		slug,
 		name: f.name || pillar?.name || slug,
-		title: f.seoTitle || pillar?.title || `${ f.name } Articles | Glow Magazine`,
+		title: f.seoTitle || pillar?.title || `${ f.name } Articles | Glow Magzine`,
 		desc: f.seoDescription || f.description || pillar?.desc || `Articles in ${ f.name }.`,
 		blurb: f.description || pillar?.blurb || '',
 		toolCategory: pillar?.toolCategory || '',
@@ -136,8 +136,8 @@ function normaliseTag( item ) {
 	return {
 		slug: f.slug || slugify( f.name ),
 		name: f.name || 'Tag',
-		title: f.seoTitle || `${ f.name } — Articles | Glow Magazine`,
-		desc: f.seoDescription || `Articles tagged ${ f.name } on Glow Magazine.`,
+		title: f.seoTitle || `${ f.name } — Articles | Glow Magzine`,
+		desc: f.seoDescription || `Articles tagged ${ f.name } on Glow Magzine.`,
 	};
 }
 

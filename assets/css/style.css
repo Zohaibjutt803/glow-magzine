@@ -112,6 +112,10 @@ input { font-family: inherit; }
 .announce__left { display: flex; align-items: center; gap: 8px; }
 .announce__links { display: none; gap: 24px; opacity: .9; }
 .announce__links a:hover { text-decoration: underline; }
+@media (max-width: 767px) {
+	.announce { font-size: 11px; line-height: 1.35; }
+	.announce__left { align-items: flex-start; }
+}
 @media (min-width: 768px) {
 	.announce__inner { flex-direction: row; }
 	.announce__links { display: flex; }
@@ -119,10 +123,11 @@ input { font-family: inherit; }
 
 /* ============================== HEADER =============================== */
 .header {
-	position: sticky; top: 0; z-index: 50;
+	position: sticky; top: 0; z-index: 200;
 	background: rgba(250, 248, 255, .85); backdrop-filter: saturate(160%) blur(10px);
 	border-bottom: 1px solid rgba(218, 226, 253, .4);
 	transition: box-shadow .2s ease;
+	isolation: isolate;
 }
 .header.is-stuck { box-shadow: var(--soft); }
 .nav { max-width: var(--container); margin: 0 auto; height: 76px; padding-inline: 16px; display: flex; align-items: center; justify-content: space-between; }
@@ -162,6 +167,27 @@ input { font-family: inherit; }
 .mobile-menu.is-open { display: block; }
 .mobile-menu a { display: block; padding: 14px 20px; font-weight: 600; color: var(--ink); border-bottom: 1px solid rgba(218, 226, 253, .4); }
 .mobile-menu a:hover { background: var(--surface-low); color: var(--primary); }
+
+@media (max-width: 1023px) {
+	.header {
+		background: var(--bg);
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+	.nav { position: relative; z-index: 2; }
+	.nav__toggle {
+		position: relative; z-index: 3;
+		min-width: 44px; min-height: 44px;
+		align-items: center; justify-content: center;
+	}
+	.mobile-menu.is-open {
+		position: relative; z-index: 1;
+		max-height: calc(100dvh - 76px);
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+}
+body.nav-open { overflow: hidden; }
 
 /* =============================== HERO =============================== */
 .hero { position: relative; padding-top: 64px; padding-bottom: 96px; overflow: hidden; }

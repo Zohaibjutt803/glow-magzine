@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://glowmagazine.com/sitemap.xml
+Sitemap: https://www.glowmagzine.com/sitemap.xml
