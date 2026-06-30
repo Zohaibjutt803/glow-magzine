@@ -52,11 +52,20 @@ jobs:
             exit 0
           fi
           git commit -m "chore(blog): rebuild from Contentful [skip ci]"
-          git push
+          # Push to this repo; if origin moved (concurrent run / manual push),
+          # rebase onto it (freshly-built files win on conflict) and retry.
+          pushed=false
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then pushed=true; break; fi
+            echo "Push rejected — syncing with origin (attempt $i)…"
+            git pull --rebase -X theirs origin main || { echo "Rebase failed."; exit 1; }
+          done
+          if [ "$pushed" != true ]; then echo "Could not push after retries."; exit 1; fi
+          # Mirror to glowmagzine (downstream mirror of this repo — force-align).
           if [ -n "$GLOW_REPO_PAT" ]; then
-            git push "https://x-access-token:${GLOW_REPO_PAT}@github.com/Zohaibjutt803/glowmagzine.git" HEAD:main \
+            git push --force "https://x-access-token:${GLOW_REPO_PAT}@github.com/Zohaibjutt803/glowmagzine.git" HEAD:main \
               && echo "✓ Mirrored build to Zohaibjutt803/glowmagzine." \
-              || echo "⚠ Mirror push to glowmagzine failed (divergence or PAT scope) — this repo still deployed."
+              || echo "⚠ Mirror push to glowmagzine failed (PAT scope?) — this repo still deployed."
           else
             echo "GLOW_REPO_PAT not set — skipped mirror push to glowmagzine."
           fi
