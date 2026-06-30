@@ -31,6 +31,7 @@ function head( { title, desc, canonical, jsonld } ) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${ esc( title ) }</title>
 <meta name="description" content="${ esc( desc ) }">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="${ SITE.url }${ canonical }">
 <meta property="og:title" content="${ esc( title ) }">
 <meta property="og:description" content="${ esc( desc ) }">
