@@ -1,21 +1,19 @@
 name: Deploy on Contentful publish
 
-# Contentful publish/unpublish → auto-deploy to Vercel (fetches fresh posts at build time).
+# Auto-deploy when Contentful publishes
 #
-# GitHub repo secrets (Settings → Secrets → Actions):
-#   VERCEL_TOKEN          — client Vercel → Account Settings → Tokens
-#   VERCEL_ORG_ID         — team_FsRFOS1fFXtjPm4VjPDE6DBA (Glow Magzine)
-#   VERCEL_PROJECT_ID     — prj_QqdCvvLhPxVY0l666iYehhZcNUxL (glow-magzine)
+# RECOMMENDED — Vercel Deploy Hook (no GitHub PAT needed):
+#   1. Vercel → glow-magzine → Settings → Git → Deploy Hooks
+#      Hook "contentful-publish" on branch main (already created)
+#   2. Contentful → Settings → Webhooks → Add:
+#      URL:    <paste Deploy Hook URL from Vercel>
+#      Method: POST
+#      Triggers: Entry → Publish, Unpublish
+#      (No custom headers or body required)
 #
-# Contentful env vars live in Vercel (not needed here) — build.mjs reads them during deploy.
-#
-# Contentful webhook (Settings → Webhooks → Add):
-#   URL:    https://api.github.com/repos/Zohaibjutt803/glow-magzine/dispatches
-#   Method: POST
-#   Headers: Authorization: Bearer <GITHUB_PAT_WITH_REPO_SCOPE>
-#            Accept: application/vnd.github+json
-#   Body:   {"event_type":"contentful_publish","client_payload":{"source":"contentful"}}
-#   Triggers: Entry → Publish, Unpublish
+# ALTERNATIVE — GitHub Actions (requires PAT + custom body):
+#   Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+#   Contentful cannot send repository_dispatch JSON by default — use Deploy Hook instead.
 
 on:
   repository_dispatch:
