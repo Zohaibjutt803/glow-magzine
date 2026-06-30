@@ -1,10 +1,2 @@
-# Build/dev scripts — not needed at runtime (prevents server.mjs being used as entrypoint)
+# Local dev server only — must not become the Vercel runtime entrypoint
 server.mjs
-build.mjs
-blog.mjs
-blog-categories.mjs
-static-pages.mjs
-tools-data.mjs
-env.mjs
-.github/
-docs/
