@@ -1,0 +1,45 @@
+name: Deploy on Contentful publish
+
+# Contentful publish/unpublish → auto-deploy to Vercel (fetches fresh posts at build time).
+#
+# GitHub repo secrets (Settings → Secrets → Actions):
+#   VERCEL_TOKEN          — client Vercel → Account Settings → Tokens
+#   VERCEL_ORG_ID         — team_FsRFOS1fFXtjPm4VjPDE6DBA (Glow Magzine)
+#   VERCEL_PROJECT_ID     — prj_QqdCvvLhPxVY0l666iYehhZcNUxL (glow-magzine)
+#
+# Contentful env vars live in Vercel (not needed here) — build.mjs reads them during deploy.
+#
+# Contentful webhook (Settings → Webhooks → Add):
+#   URL:    https://api.github.com/repos/Zohaibjutt803/glow-magzine/dispatches
+#   Method: POST
+#   Headers: Authorization: Bearer <GITHUB_PAT_WITH_REPO_SCOPE>
+#            Accept: application/vnd.github+json
+#   Body:   {"event_type":"contentful_publish","client_payload":{"source":"contentful"}}
+#   Triggers: Entry → Publish, Unpublish
+
+on:
+  repository_dispatch:
+    types: [contentful_publish]
+  workflow_dispatch:
+
+concurrency:
+  group: contentful-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Deploy to Vercel production
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npx vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN"
