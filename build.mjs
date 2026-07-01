@@ -19,7 +19,7 @@ import { BLOG_CATEGORIES } from './blog-categories.mjs';
 import { loadEnv, analyticsHead } from './env.mjs';
 
 const ROOT = dirname( fileURLToPath( import.meta.url ) );
-const ASSET_VER = '10';
+const ASSET_VER = '11';
 let HEAD_EXTRAS = '';
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const isReady = ( t ) => !! t.handler;
@@ -32,7 +32,41 @@ const authorUrl = ( slug ) => `/author/${ slug }/`;
 const tagUrl = ( slug ) => `/tag/${ slug }/`;
 
 /* ----------------------------- shared chrome ----------------------------- */
-function head( { title, desc, canonical, jsonld } ) {
+function resolveCanonical( path, override = '' ) {
+	const raw = String( override || '' ).trim();
+	if ( raw ) {
+		if ( /^https?:\/\//i.test( raw ) ) return raw;
+		return SITE.url + ( raw.startsWith( '/' ) ? raw : `/${ raw }` );
+	}
+	return SITE.url + path;
+}
+
+function mergeSchemaGraph( autoGraph, extra ) {
+	if ( ! extra ) return { '@context': 'https://schema.org', '@graph': autoGraph };
+	try {
+		const custom = typeof extra === 'string' ? JSON.parse( extra ) : extra;
+		if ( custom?.[ '@graph' ] ) {
+			return { '@context': 'https://schema.org', '@graph': [ ...autoGraph, ...custom[ '@graph' ] ] };
+		}
+		if ( Array.isArray( custom ) ) {
+			return { '@context': 'https://schema.org', '@graph': [ ...autoGraph, ...custom ] };
+		}
+		return { '@context': 'https://schema.org', '@graph': [ ...autoGraph, custom ] };
+	} catch {
+		return { '@context': 'https://schema.org', '@graph': autoGraph };
+	}
+}
+
+function head( { title, desc, canonical, canonicalUrl, keywords, ogTitle, ogDesc, ogType, ogImage, twitterCard, jsonld } ) {
+	const canon = resolveCanonical( canonical, canonicalUrl );
+	const socialTitle = ogTitle || title;
+	const socialDesc = ogDesc || desc;
+	const type = ogType || 'website';
+	const card = twitterCard || ( ogImage ? 'summary_large_image' : 'summary' );
+	const keywordsTag = keywords ? `<meta name="keywords" content="${ esc( keywords ) }">\n` : '';
+	const imageTags = ogImage
+		? `<meta property="og:image" content="${ esc( ogImage ) }">\n<meta name="twitter:image" content="${ esc( ogImage ) }">\n`
+		: '';
 	return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,16 +74,16 @@ function head( { title, desc, canonical, jsonld } ) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${ esc( title ) }</title>
 <meta name="description" content="${ esc( desc ) }">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="canonical" href="${ SITE.url }${ canonical }">
-<meta property="og:title" content="${ esc( title ) }">
-<meta property="og:description" content="${ esc( desc ) }">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${ SITE.url }${ canonical }">
+${ keywordsTag }<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="${ esc( canon ) }">
+<meta property="og:title" content="${ esc( socialTitle ) }">
+<meta property="og:description" content="${ esc( socialDesc ) }">
+<meta property="og:type" content="${ esc( type ) }">
+<meta property="og:url" content="${ esc( canon ) }">
 <meta property="og:site_name" content="${ esc( SITE.name ) }">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="${ esc( title ) }">
-<meta name="twitter:description" content="${ esc( desc ) }">
+${ imageTags }<meta name="twitter:card" content="${ esc( card ) }">
+<meta name="twitter:title" content="${ esc( socialTitle ) }">
+<meta name="twitter:description" content="${ esc( socialDesc ) }">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -330,19 +364,25 @@ function blogPostPage( p, posts, blogCategories ) {
 		? { '@type': 'Person', name: p.author.name, url: SITE.url + authorUrl( p.author.slug ) }
 		: { '@type': 'Organization', name: SITE.name, url: SITE.url + '/' };
 
+	const canonPath = postUrl( p.slug );
+	const pageUrl = resolveCanonical( canonPath, p.canonicalUrl );
+
 	const graph = [
 		{ '@type': 'BreadcrumbList', itemListElement: [
 			{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url + '/' },
 			{ '@type': 'ListItem', position: 2, name: 'Blog', item: SITE.url + '/blog/' },
 			{ '@type': 'ListItem', position: 3, name: p.categoryName, item: SITE.url + blogCatUrl( p.categorySlug ) },
-			{ '@type': 'ListItem', position: 4, name: p.title, item: SITE.url + postUrl( p.slug ) }
+			{ '@type': 'ListItem', position: 4, name: p.title, item: pageUrl }
 		] },
 		{ '@type': 'Article', headline: p.title, description: p.seoDescription, image: p.cover || undefined,
-		  datePublished: p.iso, dateModified: p.updatedIso, mainEntityOfPage: SITE.url + postUrl( p.slug ),
+		  datePublished: p.iso, dateModified: p.updatedIso, mainEntityOfPage: pageUrl,
 		  author: authorSchema,
 		  publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url + '/' },
-		  articleSection: p.categoryName }
+		  articleSection: p.categoryName,
+		  ...( p.focusKeyword ? { keywords: p.focusKeyword } : {} ) }
 	];
+
+	const jsonld = mergeSchemaGraph( graph, p.schemaExtra );
 
 	const hero = p.cover ? `<div class="article__hero"><img src="${ esc( p.cover ) }" alt="${ esc( p.coverAlt ) }"></div>` : '';
 	const byline = p.author
@@ -358,7 +398,18 @@ function blogPostPage( p, posts, blogCategories ) {
 		? `<section class="tool-section"><h2>Try these free tools</h2><div class="tools-grid">${ tools.map( toolCard ).join( '' ) }</div></section>`
 		: '';
 
-	return head( { title: p.seoTitle, desc: p.seoDescription, canonical: postUrl( p.slug ), jsonld: { '@context': 'https://schema.org', '@graph': graph } } )
+	return head( {
+		title: p.seoTitle,
+		desc: p.seoDescription,
+		canonical: canonPath,
+		canonicalUrl: p.canonicalUrl,
+		keywords: p.focusKeyword,
+		ogTitle: p.ogTitle,
+		ogDesc: p.ogDescription,
+		ogType: 'article',
+		ogImage: p.cover || '',
+		jsonld,
+	} )
 		+ HEADER
 		+ `<main><div class="page">
 <ol class="crumbs"><li><a href="/">Home</a></li><li><a href="/blog/">Blog</a></li><li><a href="${ blogCatUrl( p.categorySlug ) }">${ esc( p.categoryName ) }</a></li><li><span aria-current="page">${ esc( p.title ) }</span></li></ol>

@@ -4,7 +4,8 @@
  *
  * Expected Contentful content types (create in Contentful → Content model):
  *   blogPost   slug, title, excerpt, body, coverImage, publishedDate, updatedDate,
- *              seoTitle, seoDescription, author (ref→author), category (ref→category or Short text),
+ *              seoTitle, seoDescription, focusKeyword, canonicalUrl, coverImageAlt,
+ *              ogTitle, ogDescription, schemaJsonLd, author (ref→author), category (ref→category or Short text),
  *              tags (ref→tag, many), relatedTools (Short text list of tool slugs), featured (Boolean)
  *   author     slug, name, bio, avatar, role, seoTitle, seoDescription
  *   category   slug, name, description, seoTitle, seoDescription
@@ -176,6 +177,19 @@ function normalisePost( item, assets, entries ) {
 
 	const relatedTools = ( f.relatedTools || [] ).filter( Boolean ).map( ( s ) => String( s ).trim() );
 
+	const seoTitle = f.seoTitle || f.title || 'Untitled';
+	const seoDescription = f.seoDescription || f.excerpt || '';
+	const coverAlt = f.coverImageAlt || f.featuredImageAltText || cover?.title || f.title || '';
+
+	let schemaExtra = null;
+	if ( f.schemaJsonLd ) {
+		try {
+			schemaExtra = typeof f.schemaJsonLd === 'string' ? JSON.parse( f.schemaJsonLd ) : f.schemaJsonLd;
+		} catch {
+			schemaExtra = null;
+		}
+	}
+
 	return {
 		slug: f.slug,
 		title: f.title || 'Untitled',
@@ -183,14 +197,19 @@ function normalisePost( item, assets, entries ) {
 		categorySlug,
 		excerpt: f.excerpt || '',
 		cover: cover?.url || '',
-		coverAlt: cover?.title || f.title || '',
+		coverAlt,
 		bodyHtml: f.body ? renderNodes( f.body.content, assets ) : '',
 		iso,
 		updatedIso,
 		date: fmtDate( iso ),
 		tint: tintFor( categoryName ),
-		seoTitle: f.seoTitle || f.title,
-		seoDescription: f.seoDescription || f.excerpt || '',
+		seoTitle,
+		seoDescription,
+		focusKeyword: f.focusKeyword || '',
+		canonicalUrl: ( f.canonicalUrl || '' ).trim(),
+		ogTitle: f.ogTitle || f.openGraphTitle || seoTitle,
+		ogDescription: f.ogDescription || f.openGraphDescription || seoDescription,
+		schemaExtra,
 		author,
 		tags,
 		relatedTools,

@@ -6,6 +6,19 @@
   <description>Free online tools, calculators and how-to guides from Glow Magzine.</description>
   <language>en-us</language>
   <atom:link href="https://www.glowmagzine.com/feed.xml" rel="self" type="application/rss+xml"/>
-  <!-- no posts yet -->
+  <item>
+    <title>Best Free Online Courses in 2026: Top Platforms to Learn New Skills Without Paying</title>
+    <link>https://www.glowmagzine.com/blog/best-free-online-courses-2026/</link>
+    <guid isPermaLink="true">https://www.glowmagzine.com/blog/best-free-online-courses-2026/</guid>
+    <pubDate>Tue, 30 Jun 2026 07:00:00 GMT</pubDate>
+    <description><![CDATA[Looking for the best free online courses in 2026? Explore top platforms offering free courses with certificates in programming, business, digital marketing, AI, graphic design, languages, and more to boost your career and skills.]]></description>
+  </item>
+  <item>
+    <title>Best Android Apps in 2026: 20 Must-Have Apps to Boost Productivity, Entertainment and Daily Life</title>
+    <link>https://www.glowmagzine.com/blog/best-android-apps-2026/</link>
+    <guid isPermaLink="true">https://www.glowmagzine.com/blog/best-android-apps-2026/</guid>
+    <pubDate>Tue, 30 Jun 2026 07:00:00 GMT</pubDate>
+    <description><![CDATA[Looking for the best Android apps in 2026? Discover the top free and paid Android apps for productivity, entertainment, security, education, and daily life. Our carefully selected list will help you get the most out of your Android smartphone.]]></description>
+  </item>
 </channel>
 </rss>
