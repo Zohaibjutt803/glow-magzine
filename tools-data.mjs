@@ -18,6 +18,7 @@
 export const SITE = {
 	name: 'Glow Magzine',
 	url: 'https://www.glowmagzine.com',
+	email: 'gm.glowmagzine@gmail.com',
 	tagline: 'Glow Magzine – Smart Guides, Latest Trends & Free Online Tools',
 	footer: 'Glow Magzine is your all-in-one platform for expert articles, trending news, helpful guides, and free online tools. Explore quality content designed to inform, inspire, and simplify your everyday life.',
 };

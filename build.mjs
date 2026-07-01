@@ -127,7 +127,7 @@ const FOOTER = `
 <div class="footer__brand">
 ${ LOGO }
 <p class="footer__about">${ esc( SITE.footer ) }</p>
-<div class="footer__social"><a href="/" aria-label="Website"><span class="material-symbols-outlined">public</span></a><a href="${ staticUrl( 'contact' ) }" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a><a href="/tools/" aria-label="Tools"><span class="material-symbols-outlined">apps</span></a></div>
+<div class="footer__social"><a href="/" aria-label="Website"><span class="material-symbols-outlined">public</span></a><a href="mailto:${ SITE.email }" aria-label="Email"><span class="material-symbols-outlined">alternate_email</span></a><a href="/tools/" aria-label="Tools"><span class="material-symbols-outlined">apps</span></a></div>
 </div>
 <div class="footer__col"><h4>Quick Links</h4><ul><li><a href="/">Home</a></li><li><a href="/tools/">All Tools</a></li><li><a href="/tools/">Categories</a></li><li><a href="/blog/">Blog</a></li><li><a href="${ staticUrl( 'about' ) }">About Us</a></li><li><a href="${ staticUrl( 'contact' ) }">Contact</a></li></ul></div>
 <div class="footer__col"><h4>Categories</h4><ul>${ Object.entries( CATEGORIES ).map( ( [ k, c ] ) => `<li><a href="${ catUrl( k ) }">${ esc( c.name ) }</a></li>` ).join( '' ) }</ul></div>
