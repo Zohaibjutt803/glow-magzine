@@ -19,7 +19,7 @@ import { BLOG_CATEGORIES } from './blog-categories.mjs';
 import { loadEnv, analyticsHead } from './env.mjs';
 
 const ROOT = dirname( fileURLToPath( import.meta.url ) );
-const ASSET_VER = '9';
+const ASSET_VER = '10';
 let HEAD_EXTRAS = '';
 const esc = ( s = '' ) => String( s ).replace( /&/g, '&amp;' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, '&quot;' );
 const isReady = ( t ) => !! t.handler;
@@ -319,7 +319,7 @@ function blogListingPage( posts, categories ) {
 ${ catNav }
 <div class="blog-grid">${ posts.length ? posts.map( postCard ).join( '' ) : '<p class="gmt-notice">No articles yet — check back soon.</p>' }</div>
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>\n</body></html>`;
+		+ FOOTER + `\n</body></html>`;
 }
 
 function blogPostPage( p, posts, blogCategories ) {
@@ -376,7 +376,7 @@ ${ ad( 'below_result' ) }
 ${ relatedHtml }
 ${ toolsHtml }
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>\n</body></html>`;
+		+ FOOTER + `\n</body></html>`;
 }
 
 function categoryArchivePage( cat, posts ) {
@@ -400,7 +400,7 @@ function categoryArchivePage( cat, posts ) {
 <div class="blog-grid">${ catPosts.length ? catPosts.map( postCard ).join( '' ) : '<p class="gmt-notice">Articles in this category are coming soon.</p>' }</div>
 ${ tools.length ? `<section class="tool-section"><h2>Free ${ esc( cat.name ) } Tools</h2><div class="tools-grid">${ tools.map( toolCard ).join( '' ) }</div></section>` : '' }
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>\n</body></html>`;
+		+ FOOTER + `\n</body></html>`;
 }
 
 function authorArchivePage( author, posts ) {
@@ -421,7 +421,7 @@ function authorArchivePage( author, posts ) {
 <header class="page-head author-head">${ avatar }<div><span class="eyebrow">Author</span><h1>${ esc( author.name ) }</h1>${ author.role ? `<p>${ esc( author.role ) }</p>` : '' }${ author.bio ? `<p>${ esc( author.bio ) }</p>` : '' }</div></header>
 <div class="blog-grid">${ authorPosts.length ? authorPosts.map( postCard ).join( '' ) : '<p class="gmt-notice">No published articles yet.</p>' }</div>
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>\n</body></html>`;
+		+ FOOTER + `\n</body></html>`;
 }
 
 function tagArchivePage( tag, posts ) {
@@ -441,7 +441,7 @@ function tagArchivePage( tag, posts ) {
 <header class="page-head"><span class="eyebrow">Tag</span><h1>${ esc( tag.name ) }</h1><p>Articles tagged &ldquo;${ esc( tag.name ) }&rdquo;.</p></header>
 <div class="blog-grid">${ tagged.length ? tagged.map( postCard ).join( '' ) : '<p class="gmt-notice">No articles with this tag yet.</p>' }</div>
 </div></main>`
-		+ FOOTER + `<script src="/assets/js/main.js?v=${ ASSET_VER }"></script>\n</body></html>`;
+		+ FOOTER + `\n</body></html>`;
 }
 
 function searchPage() {

@@ -178,11 +178,14 @@ input { font-family: inherit; }
 	.nav__toggle {
 		position: relative; z-index: 3;
 		min-width: 44px; min-height: 44px;
+		display: inline-flex;
 		align-items: center; justify-content: center;
+		touch-action: manipulation;
+		-webkit-tap-highlight-color: transparent;
 	}
 	.mobile-menu.is-open {
-		position: relative; z-index: 1;
-		max-height: calc(100dvh - 76px);
+		position: relative; z-index: 2;
+		max-height: calc(100dvh - 64px);
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
 	}
@@ -232,9 +235,14 @@ body.nav-open { overflow: hidden; }
 .mockup__body { padding: 32px; }
 .mockup__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
 .mockup__head h3 { font-size: 22px; font-weight: 700; }
-.mockup__head button { color: var(--primary); font-weight: 700; font-size: 14px; }
+.mockup__head button,
+.mockup__view-all { color: var(--primary); font-weight: 700; font-size: 14px; text-decoration: none; }
+.mockup__view-all:hover { text-decoration: underline; }
 .mockup__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .mockup__tool { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+a.mockup__tool { text-decoration: none; color: inherit; cursor: pointer; border-radius: var(--radius); padding: 6px 4px; transition: transform .15s ease, background .15s ease; }
+a.mockup__tool:hover { transform: translateY(-2px); background: var(--surface-low); }
+a.mockup__tool:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .mockup__tool span:last-child { font-size: 11px; font-weight: 700; text-align: center; }
 .mockup__ico { width: 62px; height: 62px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; }
 .mockup__ico .material-symbols-outlined { font-size: 32px !important; font-variation-settings: 'wght' 600, 'opsz' 48, 'FILL' 1, 'GRAD' 0; }
