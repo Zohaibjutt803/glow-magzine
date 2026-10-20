@@ -6,6 +6,17 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [
+    { "source": "/home/", "destination": "/", "permanent": true },
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/2021/11/29/all-you-should-know-about-nickelodeon-cruise/", "destination": "/blog/", "permanent": true },
+    { "source": "/2022/06/24/is-ifvod-tv-worth-trying/", "destination": "/blog/", "permanent": true },
+    { "source": "/beli-aromaterapi-bayi/", "destination": "/", "permanent": true },
+    { "source": "/empowering-iphone-users-mastering-emergency-sos-on-your-iphone-14/", "destination": "/blog/", "permanent": true },
+    { "source": "/why-the-maldives-would-be-a-great-destination-for-your-next-trip-away/feed/", "destination": "/", "permanent": true },
+    { "source": "/wp-content/:path*", "destination": "/", "permanent": true },
+    { "source": "/wp-includes/:path*", "destination": "/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

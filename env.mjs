@@ -21,7 +21,7 @@ export async function loadEnv() {
 export function analyticsHead( esc ) {
 	const parts = [];
 	const verify = process.env.GOOGLE_SITE_VERIFICATION;
-	const ga = process.env.GA_MEASUREMENT_ID;
+	const ga = process.env.GA_MEASUREMENT_ID || 'G-R8CTPKNKYS';
 	if ( verify ) parts.push( `<meta name="google-site-verification" content="${ esc( verify ) }">` );
 	if ( ga ) {
 		parts.push( `<script async src="https://www.googletagmanager.com/gtag/js?id=${ esc( ga ) }"></script>` );
